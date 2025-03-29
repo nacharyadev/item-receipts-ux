@@ -3,8 +3,8 @@ import React from 'react';
 interface ReceiptFiltersProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  filter: 'all' | 'expected' | 'in-progress' | 'completed';
-  onFilterChange: (filter: 'all' | 'expected' | 'in-progress' | 'completed') => void;
+  filter: 'all' | 'expected' | 'receiving-in-progress' | 'completed';
+  onFilterChange: (filter: 'all' | 'expected' | 'receiving-in-progress' | 'completed') => void;
 }
 
 export default function ReceiptFilters({
@@ -13,6 +13,19 @@ export default function ReceiptFilters({
   filter,
   onFilterChange
 }: ReceiptFiltersProps) {
+  const formatStatus = (status: string) => {
+    return status.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
+  const statusOptions = [
+    'all',
+    'expected',
+    'receiving-in-progress',
+    'completed'
+  ] as const;
+
   return (
     <div className="bg-white shadow">
       <div className="px-4 py-5 sm:p-6">
@@ -38,47 +51,20 @@ export default function ReceiptFilters({
               />
             </div>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => onFilterChange('all')}
-              className={`px-3 py-2 text-sm font-medium rounded-md ${
-                filter === 'all'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => onFilterChange('expected')}
-              className={`px-3 py-2 text-sm font-medium rounded-md ${
-                filter === 'expected'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Expected
-            </button>
-            <button
-              onClick={() => onFilterChange('in-progress')}
-              className={`px-3 py-2 text-sm font-medium rounded-md ${
-                filter === 'in-progress'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              In Progress
-            </button>
-            <button
-              onClick={() => onFilterChange('completed')}
-              className={`px-3 py-2 text-sm font-medium rounded-md ${
-                filter === 'completed'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Completed
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {statusOptions.map((status) => (
+              <button
+                key={status}
+                onClick={() => onFilterChange(status)}
+                className={`px-3 py-2 text-sm font-medium rounded-md ${
+                  filter === status
+                    ? 'bg-blue-100 text-blue-700'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {formatStatus(status)}
+              </button>
+            ))}
           </div>
         </div>
       </div>
