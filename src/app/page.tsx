@@ -338,6 +338,42 @@ export default function Home() {
         }
       ],
       poNumbers: ['PO-2024-009']
+    },
+    {
+      id: '10',
+      receiptNumber: 'REC-010',
+      vendorName: 'Delayed Electronics',
+      status: 'completed',
+      expectedDate: new Date('2024-03-15'),
+      receivedDate: new Date('2024-03-17'),
+      receivedBy: 'John Doe',
+      totalItems: 4,
+      totalAmount: 2800.00,
+      priority: 'high',
+      items: [
+        {
+          id: '10-1',
+          name: 'Gaming Monitor',
+          quantity: 2,
+          unitPrice: 800.00,
+          totalPrice: 1600.00,
+          sku: 'MON-002',
+          category: 'Electronics',
+          priority: 'high'
+        },
+        {
+          id: '10-2',
+          name: 'Gaming Keyboard',
+          quantity: 2,
+          unitPrice: 600.00,
+          totalPrice: 1200.00,
+          sku: 'KBD-002',
+          category: 'Electronics',
+          priority: 'high'
+        }
+      ],
+      poNumbers: ['PO-2024-010'],
+      thumbnailUrl: '/shipment1.jpeg'
     }
   ];
 

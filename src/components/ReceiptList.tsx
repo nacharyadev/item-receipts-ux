@@ -12,7 +12,8 @@ import {
   ArrowPathIcon,
   CheckBadgeIcon,
   XCircleIcon,
-  ClipboardIcon
+  ClipboardIcon,
+  ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 
@@ -104,6 +105,29 @@ export default function ReceiptList({
     ).join(' ');
   };
 
+  const getDeliveryStatus = (receipt: ItemReceipt) => {
+    if (receipt.status === 'completed') {
+      const expectedDate = new Date(receipt.expectedDate);
+      const receivedDate = new Date(receipt.receivedDate);
+      const diffDays = Math.floor((receivedDate.getTime() - expectedDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (diffDays > 0) {
+        return {
+          text: `Delayed by ${diffDays} day${diffDays > 1 ? 's' : ''}`,
+          color: 'text-red-600',
+          icon: <ExclamationCircleIcon className="h-4 w-4 text-red-500" />
+        };
+      } else if (diffDays < 0) {
+        return {
+          text: `Received ${Math.abs(diffDays)} day${Math.abs(diffDays) > 1 ? 's' : ''} early`,
+          color: 'text-green-600',
+          icon: <CheckCircleIcon className="h-4 w-4 text-green-500" />
+        };
+      }
+    }
+    return null;
+  };
+
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-md">
       <ul role="list" className="divide-y divide-gray-200">
@@ -146,6 +170,27 @@ export default function ReceiptList({
                       </>
                     )}
                   </div>
+                  {receipt.status === 'completed' && (
+                    <div className="mt-1 flex items-center">
+                      {(() => {
+                        const deliveryStatus = getDeliveryStatus(receipt);
+                        if (deliveryStatus) {
+                          return (
+                            <div className={`flex items-center text-xs ${deliveryStatus.color}`}>
+                              {deliveryStatus.icon}
+                              <span className="ml-1">{deliveryStatus.text}</span>
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="flex items-center text-xs text-green-600">
+                            <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                            <span className="ml-1">Received on time</span>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </div>
                 <div className="ml-4 flex-shrink-0 flex items-center">
                   {receipt.thumbnailUrl && (
