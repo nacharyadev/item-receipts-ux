@@ -65,25 +65,12 @@ export default function ReceiptList({
     }
   };
 
-  const getStatusColor = (status: ItemReceipt['status'], inspectionStatus?: ItemReceipt['inspectionStatus']) => {
+  const getStatusColor = (status: ItemReceipt['status']) => {
     switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'receiving-in-progress':
-        switch (inspectionStatus) {
-          case 'pending-inspection':
-            return 'bg-purple-100 text-purple-800';
-          case 'inspection-in-progress':
-            return 'bg-indigo-100 text-indigo-800';
-          case 'accepted':
-            return 'bg-green-100 text-green-800';
-          case 'partially-accepted':
-            return 'bg-yellow-100 text-yellow-800';
-          case 'rejected':
-            return 'bg-red-100 text-red-800';
-          default:
-            return 'bg-blue-100 text-blue-800';
-        }
+        return 'bg-yellow-100 text-yellow-800';
       case 'sent-for-inspection':
         return 'bg-orange-100 text-orange-800';
       case 'expected':
@@ -127,7 +114,7 @@ export default function ReceiptList({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center">
                     {getStatusIcon(receipt.status, receipt.inspectionStatus)}
-                    <span className={`ml-2 inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(receipt.status, receipt.inspectionStatus)}`}>
+                    <span className={`ml-2 inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(receipt.status)}`}>
                       {formatStatus(receipt.status, receipt.inspectionStatus)}
                     </span>
                   </div>
@@ -148,6 +135,16 @@ export default function ReceiptList({
                     <p className="ml-2 text-sm text-gray-500">
                       Expected: {receipt.expectedDate.toLocaleDateString()}
                     </p>
+                    {receipt.status === 'completed' && (
+                      <>
+                        <p className="ml-2 text-sm text-gray-500">
+                          Received: {receipt.receivedDate.toLocaleDateString()}
+                        </p>
+                        <p className="ml-2 text-sm text-gray-500">
+                          By: {receipt.receivedBy}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="ml-4 flex-shrink-0 flex items-center">
