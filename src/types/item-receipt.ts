@@ -4,15 +4,17 @@ export interface ItemReceipt {
   vendorName: string;
   status: 'expected' | 'receiving-in-progress' | 'sent-for-inspection' | 'completed';
   expectedDate: Date;
+  receivedDate: Date;
+  receivedBy: string;
   totalItems: number;
   totalAmount: number;
   priority: 'normal' | 'high' | 'urgent';
-  items: Item[];
+  items: ItemReceiptLine[];
   thumbnailUrl?: string; // URL to the packing slip or proof of receipt thumbnail
   poNumbers: string[]; // List of associated PO numbers
 }
 
-export interface Item {
+export interface ItemReceiptLine {
   id: string;
   name: string;
   quantity: number;
