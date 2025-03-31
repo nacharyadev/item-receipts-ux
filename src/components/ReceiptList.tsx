@@ -11,13 +11,14 @@ import {
   ClipboardDocumentListIcon,
   ArrowPathIcon,
   CheckBadgeIcon,
-  XCircleIcon
+  XCircleIcon,
+  ClipboardIcon
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 
 interface ReceiptListProps {
   receipts: ItemReceipt[];
-  filter: 'all' | 'expected' | 'receiving-in-progress' | 'completed';
+  filter: 'all' | 'expected' | 'receiving-in-progress' | 'sent-for-inspection' | 'completed';
   searchQuery: string;
 }
 
@@ -55,6 +56,8 @@ export default function ReceiptList({
           default:
             return <ClockIcon className="h-5 w-5 text-blue-500" />;
         }
+      case 'sent-for-inspection':
+        return <ArrowPathIcon className="h-5 w-5 text-orange-500" />;
       case 'expected':
         return <TruckIcon className="h-5 w-5 text-blue-500" />;
       default:
@@ -81,6 +84,8 @@ export default function ReceiptList({
           default:
             return 'bg-blue-100 text-blue-800';
         }
+      case 'sent-for-inspection':
+        return 'bg-orange-100 text-orange-800';
       case 'expected':
         return 'bg-blue-100 text-blue-800';
       default:
@@ -117,69 +122,56 @@ export default function ReceiptList({
       <ul role="list" className="divide-y divide-gray-200">
         {filteredReceipts.map((receipt) => (
           <li key={receipt.id}>
-            <a href="#" className="block hover:bg-gray-50">
-              <div className="px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between">
+            <div className="px-4 py-4 sm:px-6 hover:bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center">
                     {getStatusIcon(receipt.status, receipt.inspectionStatus)}
                     <span className={`ml-2 inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(receipt.status, receipt.inspectionStatus)}`}>
                       {formatStatus(receipt.status, receipt.inspectionStatus)}
                     </span>
                   </div>
-                  <div className="ml-2 flex-shrink-0 flex gap-2">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(receipt.priority)}`}>
-                      {receipt.priority === 'urgent' && <ExclamationTriangleIcon className="h-3 w-3 mr-1" />}
-                      {receipt.priority.charAt(0).toUpperCase() + receipt.priority.slice(1)}
-                    </span>
+                  <div className="mt-1 flex items-center">
+                    <p className="text-sm font-medium text-indigo-600 truncate">
+                      {receipt.receiptNumber}
+                    </p>
+                    <div className="ml-2 flex items-center text-xs text-gray-500">
+                      <ClipboardIcon className="h-3 w-3 mr-1" />
+                      <span className="font-medium mr-1">PO:</span>
+                      <span className="text-gray-600">
+                        {receipt.poNumbers.join(', ')}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-1 flex items-center">
+                    <p className="text-sm text-gray-900">{receipt.vendorName}</p>
+                    <p className="ml-2 text-sm text-gray-500">
+                      Expected: {receipt.expectedDate.toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
-                <div className="mt-2 sm:flex sm:justify-between">
-                  <div className="sm:flex items-center">
-                    <div className="flex items-center">
-                      <p className="text-sm text-gray-500">
-                        {receipt.vendorName}
-                      </p>
-                      <div className="ml-3 flex items-center text-xs text-gray-500">
-                        <ClipboardDocumentListIcon className="h-3 w-3 mr-1" />
-                        <span className="font-medium mr-1">PO:</span>
-                        <span className="text-gray-600">
-                          {receipt.poNumbers.join(', ')}
-                        </span>
-                      </div>
+                <div className="ml-4 flex-shrink-0 flex items-center">
+                  {receipt.thumbnailUrl && (
+                    <div className="relative h-16 w-16 mr-4">
+                      <Image
+                        src={receipt.thumbnailUrl}
+                        alt="Packing Slip"
+                        fill
+                        className="object-cover rounded-md"
+                      />
                     </div>
-                    <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                  )}
+                  <div className="flex flex-col items-end">
+                    <p className="text-sm font-medium text-gray-900">
+                      ${receipt.totalAmount.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-500">
                       {receipt.totalItems} items
                     </p>
                   </div>
-                  <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                    <p>
-                      Expected: {format(receipt.expectedDate, 'MMM d, yyyy')}
-                    </p>
-                    <p className="ml-4">
-                      ${receipt.totalAmount.toLocaleString()}
-                    </p>
-                    <ChevronRightIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-                  </div>
                 </div>
-                {(receipt.status === 'receiving-in-progress' || receipt.status === 'completed') && receipt.thumbnailUrl && (
-                  <div className="mt-4 flex items-center">
-                    <div className="relative h-24 w-32 rounded-md overflow-hidden border border-gray-200 shadow-sm">
-                      <Image
-                        src={receipt.thumbnailUrl}
-                        alt={`${receipt.status === 'receiving-in-progress' ? 'Packing Slip' : 'Proof of Receipt'} for ${receipt.receiptNumber}`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover hover:scale-105 transition-transform duration-200"
-                      />
-                    </div>
-                    <div className="ml-3 flex items-center text-sm text-gray-500">
-                      <DocumentIcon className="h-4 w-4 mr-1" />
-                      <span>{receipt.status === 'receiving-in-progress' ? 'Packing Slip' : 'Proof of Receipt'}</span>
-                    </div>
-                  </div>
-                )}
               </div>
-            </a>
+            </div>
           </li>
         ))}
       </ul>

@@ -2,8 +2,7 @@ export interface ItemReceipt {
   id: string;
   receiptNumber: string;
   vendorName: string;
-  status: 'expected' | 'receiving-in-progress' | 'completed';
-  inspectionStatus?: 'pending-inspection' | 'inspection-in-progress' | 'accepted' | 'partially-accepted' | 'rejected';
+  status: 'expected' | 'receiving-in-progress' | 'sent-for-inspection' | 'completed';
   expectedDate: Date;
   totalItems: number;
   totalAmount: number;
@@ -26,9 +25,13 @@ export interface Item {
 
 export interface ReceiptStats {
   expectedToday: number;
+  expectedValue: number;
   inProgress: number;
+  inProgressValue: number;
+  sentForInspection: number;
+  sentForInspectionValue: number;
   completedToday: number;
-  totalValue: number;
+  completedValue: number;
   highPriorityCount: number;
   urgentCount: number;
 } 

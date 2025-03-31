@@ -9,9 +9,13 @@ import ReceiptFilters from '@/components/ReceiptFilters';
 export default function Home() {
   const mockStats = {
     expectedToday: 3,
+    expectedValue: 3750.00,
     inProgress: 2,
+    inProgressValue: 3500.00,
+    sentForInspection: 1,
+    sentForInspectionValue: 750.00,
     completedToday: 1,
-    totalValue: 15500.75,
+    completedValue: 1200.00,
     highPriorityCount: 3,
     urgentCount: 2
   };
@@ -92,7 +96,13 @@ export default function Home() {
       receiptNumber: 'REC-003',
       vendorName: 'Tech Solutions Inc',
       status: 'receiving-in-progress',
-      inspectionStatus: 'pending-inspection',
+      inspection: {
+        id: 'INS-001',
+        status: 'pending-inspection',
+        inspectionDate: new Date('2024-03-18'),
+        inspectorName: 'John Smith',
+        notes: 'Initial inspection pending'
+      },
       expectedDate: new Date('2024-03-18'),
       totalItems: 3,
       totalAmount: 750.00,
@@ -116,7 +126,13 @@ export default function Home() {
       receiptNumber: 'REC-004',
       vendorName: 'Office Depot',
       status: 'receiving-in-progress',
-      inspectionStatus: 'accepted',
+      inspection: {
+        id: 'INS-002',
+        status: 'accepted',
+        inspectionDate: new Date('2024-03-17'),
+        inspectorName: 'Jane Doe',
+        notes: 'All items meet quality standards'
+      },
       expectedDate: new Date('2024-03-17'),
       totalItems: 15,
       totalAmount: 4500.00,
@@ -185,7 +201,13 @@ export default function Home() {
       receiptNumber: 'REC-006',
       vendorName: 'Digital Solutions',
       status: 'receiving-in-progress',
-      inspectionStatus: 'partially-accepted',
+      inspection: {
+        id: 'INS-003',
+        status: 'partially-accepted',
+        inspectionDate: new Date('2024-03-15'),
+        inspectorName: 'Mike Johnson',
+        notes: 'Some items require rework'
+      },
       expectedDate: new Date('2024-03-15'),
       totalItems: 8,
       totalAmount: 2400.00,
@@ -220,7 +242,13 @@ export default function Home() {
       receiptNumber: 'REC-007',
       vendorName: 'Quality Supplies',
       status: 'receiving-in-progress',
-      inspectionStatus: 'rejected',
+      inspection: {
+        id: 'INS-004',
+        status: 'rejected',
+        inspectionDate: new Date('2024-03-14'),
+        inspectorName: 'Sarah Wilson',
+        notes: 'Items do not meet quality standards'
+      },
       expectedDate: new Date('2024-03-14'),
       totalItems: 6,
       totalAmount: 1800.00,
@@ -254,7 +282,13 @@ export default function Home() {
       receiptNumber: 'REC-008',
       vendorName: 'Tech Gadgets',
       status: 'receiving-in-progress',
-      inspectionStatus: 'partially-accepted',
+      inspection: {
+        id: 'INS-005',
+        status: 'partially-accepted',
+        inspectionDate: new Date('2024-03-16'),
+        inspectorName: 'Tom Brown',
+        notes: 'Minor issues found'
+      },
       expectedDate: new Date('2024-03-16'),
       totalItems: 8,
       totalAmount: 2400.00,
@@ -289,7 +323,13 @@ export default function Home() {
       receiptNumber: 'REC-009',
       vendorName: 'Quality Electronics',
       status: 'receiving-in-progress',
-      inspectionStatus: 'rejected',
+      inspection: {
+        id: 'INS-006',
+        status: 'rejected',
+        inspectionDate: new Date('2024-03-15'),
+        inspectorName: 'Lisa Anderson',
+        notes: 'Critical quality issues found'
+      },
       expectedDate: new Date('2024-03-15'),
       totalItems: 6,
       totalAmount: 1800.00,
